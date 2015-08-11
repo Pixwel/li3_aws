@@ -3,7 +3,7 @@
 
 # li3_aws
 
-This plugin provides an adapter to [li3_filesystem](https://github.com/radify/li3_filesystem plugin) plugin.
+This plugin provides an adapter to [li3_filesystem](https://github.com/radify/li3_filesystem) plugin.
 
 ## Usage
 
