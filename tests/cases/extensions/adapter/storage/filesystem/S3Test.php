@@ -110,8 +110,11 @@ class S3Test extends \lithium\test\Unit {
             'overwrite' => false
         ]);
 
-        $this->expectException('File `test_existing_file` already exists in S3 bucket `li3_aws`.');
-        $closure($this->_adapter, $params);
+        $fn = function() use ($params, $closure) {
+            $closure($this->_adapter, $params);
+        };
+
+        $this->assertException('File `test_existing_file` already exists in S3 bucket `li3_aws`.', $fn);
     }
 
     public function testWriteDoesntAutoCreateBucket() {
@@ -135,8 +138,12 @@ class S3Test extends \lithium\test\Unit {
             'autoBucket' => false
         ]);
 
-        $this->expectException('Unexisting S3 bucket `unexisting_bucket`.');
-        $closure($this->_adapter, $params);
+        $fn = function() use ($closure, $params) {
+            $closure($this->_adapter, $params);
+        };
+
+        $this->assertException('Unexisting S3 bucket `unexisting_bucket`.', $fn);
+
     }
 
     public function testRead() {
@@ -192,11 +199,13 @@ class S3Test extends \lithium\test\Unit {
     }
 
     public function testUrlWithCloudfrontCdnWithNoCloudfrontDefined() {
-        $this->expectException("CDN need a valid domain address for `'cloudfront'` option.");
-        $url = $this->_adapter->url('test_file', [
-            'cloudfront' => null,
-            'cdn' => true
-        ]);
+        $fn = function() {
+            $url = $this->_adapter->url('test_file', [
+                'cloudfront' => null,
+                'cdn' => true
+            ]);
+        };
+        $this->assertException("CDN need a valid domain address for `'cloudfront'` option.", $fn);
     }
 
     public function testSignS3() {
